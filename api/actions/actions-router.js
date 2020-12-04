@@ -36,11 +36,11 @@ router.put('/:id', [validateActionId], [validateAction], async (req, res) => {
 	res.status(201).json(req.body);
 });
 
-// 🌕   [DELETE] /api/actions/:id (sends updated project as res)
+// 🌕   [DELETE] /api/actions/:id (sends confirmation as res)
 router.delete('/:id', [validateActionId], async (req, res) => {
 	const { id } = req.params;
 	await Actions.remove(id);
-	res.status(200).json(await Actions.get());
+	res.status(200).json(`action with id ${id} deleted`);
 });
 
 module.exports = router;
