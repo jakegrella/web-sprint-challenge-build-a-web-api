@@ -8,7 +8,7 @@ const validateAction = require('../middlewares/validateAction');
 const router = express.Router();
 
 // 🌕   [GET] /api/actions (sends array of actions or empty array as res)
-router.get('/', async (req, res) => {
+router.get('/', async (_, res) => {
 	try {
 		const actions = await Actions.get();
 		res.status(200).json(actions);
@@ -29,10 +29,18 @@ router.post('/', [validateAction], async (req, res) => {
 	res.status(200).json(req.body);
 });
 
-// 🌕   [PUT] /api/actions (sends updated action as res)
-router.put('/', [validateAction], async (req, res) => {
-	await Actions.update(req.action.id, req.body);
+// 🌕   [PUT] /api/actions/:id (sends updated action as res)
+router.put('/:id', [validateActionId], [validateAction], async (req, res) => {
+	const { id } = req.params;
+	await Actions.update(id, req.body);
 	res.status(201).json(req.body);
+});
+
+// 🌕   [DELETE] /api/actions/:id (sends updated project as res)
+router.delete('/:id', [validateActionId], async (req, res) => {
+	const { id } = req.params;
+	await Actions.remove(id);
+	res.status(200).json(await Actions.get());
 });
 
 module.exports = router;
